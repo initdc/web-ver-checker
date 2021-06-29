@@ -1,17 +1,12 @@
 #!/usr/bin/env -S deno run --allow-net
 
-import {
-  blue,
-  green,
-  red,
-  yellow,
-} from "https://deno.land/std@0.99.0/fmt/colors.ts";
+import { green, red, yellow } from "https://deno.land/std@0.99.0/fmt/colors.ts";
 
 const kodbox_uri = "https://api.kodcloud.com/?app%2Fversion";
 
 enum Mode {
-  object,
-  regexp
+  object = "object",
+  regexp = "regexp",
 }
 
 interface Options {
@@ -19,18 +14,52 @@ interface Options {
   regexp?: RegExp;
 }
 
-// , mode: Mode, options: Options
-async function get_origin(uri: string, options: Options) {
-  const res = await fetch(uri);
+function utils() {}
 
-  if (res.ok) {
-    const resObj = await res.json();
-    console.log(green("Success"));
-    console.log(resObj[options.object[0]]);
-  } else {
-    const err = await res.text();
-    console.error(red("Failure to GET\n"), err);
+utils.depthOf = function (object: any) { 
+  let level = 1;
+  for (const key in object) {
+    if (!object.hasOwnProperty(key)) continue;
+
+    if (typeof object[key] == "object") {
+      let depth = utils.depthOf(object[key]) + 1;
+      level = Math.max(depth, level);
+    }
+  }
+  return level;
+};
+
+utils.lastValue = function(object: any, key: any) {
+  const depth = utils.depthOf(object)
+  for (let i :number = 0, i < depth; i++) {
+      if (Object.keys(object).includes(key[i])){
+          return lastValue(Object.values(object[key[i]]), key[i])
+    }
+  }
+  
+}
+
+// , mode: Mode, options: Options
+async function get_origin(uri: string, mode: string, options: Options) {
+  const result = [];
+
+  if (mode === Mode.object) {
+    const queryDepth = options.object.length;
+
+    const res = await fetch(uri);
+    if (res.ok) {
+      const resObj = await res.json();
+      console.log(green("Result: Success"));
+      const resDepth = utils.depthOf(resObj);
+      const key = options.object
+      if (resDepth >= queryDepth) {
+        console.log(Object.keys(resObj).includes(key[1]))
+      }
+    } else {
+      const err = await res.text();
+      console.error(red("Result: Failure"));
+    }
   }
 }
 
-get_origin(kodbox_uri, {object: ['data', 'server', 'version']});
+get_origin(kodbox_uri, "object", { object: ['data','server','version'] });
