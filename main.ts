@@ -29,19 +29,20 @@ utils.depthOf = function (object: any) { 
   return level;
 };
 
-utils.lastValue = function(object: any, key: any) {
-  const depth = utils.depthOf(object)
-  for (let i :number = 0, i < depth; i++) {
-      if (Object.keys(object).includes(key[i])){
-          return lastValue(Object.values(object[key[i]]), key[i])
-    }
-  }
+// utils.lastValue = function(object: any, key: any) {
+//   const depth = utils.depthOf(object)
+//   for (let i :number = 0, i < depth; i++) {
+//       if (Object.keys(object).includes(key[i])){
+//           return lastValue(Object.values(object[key[i]]), key[i])
+//     }
+//   }
   
-}
+// }
 
 // , mode: Mode, options: Options
 async function get_origin(uri: string, mode: string, options: Options) {
-  const result = [];
+  const result = [{ a: 'a'}];
+  console.log(typeof result[0].a)
 
   if (mode === Mode.object) {
     const queryDepth = options.object.length;
