@@ -1,0 +1,30 @@
+{
+  "name": "web-ver-checker",
+  "version": "0.0.1",
+  "description": "Verison checker by webhook",
+  "type": "module",
+  "module": "./index.js",
+  "ignore": ["main.rb", "main.ts"],
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/initdc/web-ver-checker.git"
+  },
+  "keywords": [
+    "version",
+    "checker",
+    "webhook"
+  ],
+  "author": "initdc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/initdc/web-ver-checker/issues"
+  },
+  "homepage": "https://github.com/initdc/web-ver-checker#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}

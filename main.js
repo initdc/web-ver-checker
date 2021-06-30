@@ -1,50 +1,24 @@
-// request Request (2)
-(function(callback) {
-    'use strict';
+import { getOrigin, getTarget } from "./index.js";
 
-    const httpTransport = require('https');
-    const responseEncoding = 'utf8';
-    const httpOptions = {
-        hostname: 'api.github.com',
-        port: '443',
-        path: '/repos/pliplive/kodbox/git/refs/tags/1.20',
-        method: 'GET',
-        headers: {"accept":"application/vnd.github.v3+json"}
-    };
-    httpOptions.headers['User-Agent'] = 'node ' + process.version;
+const version = await getOrigin(
+  "https://api.kodcloud.com/?app%2Fversion",
+  "json",
+  ["data", "server", "version"]
+);
 
-    // Paw Store Cookies option is not supported
+// const regexp = /(version.+)/g;
+// getOrigin("https://api.kodcloud.com/?app%2Fversion", "regexp", regexp, true);
 
-    const request = httpTransport.request(httpOptions, (res) => {
-        let responseBufs = [];
-        let responseStr = '';
+const tagExist = await getTarget(
+  "https://api.github.com/repos/pliplive/kodbox/git/refs/tags/",
+  version,
+  true
+);
 
-        res.on('data', (chunk) => {
-            if (Buffer.isBuffer(chunk)) {
-                responseBufs.push(chunk);
-            }
-            else {
-                responseStr = responseStr + chunk;
-            }
-        }).on('end', () => {
-            responseStr = responseBufs.length > 0 ?
-                Buffer.concat(responseBufs).toString(responseEncoding) : responseStr;
-
-            callback(null, res.statusCode, res.headers, responseStr);
-        });
-
-    })
-        .setTimeout(0)
-        .on('error', (error) => {
-            callback(error);
-        });
-    request.write("")
-    request.end();
-
-
-})((error, statusCode, headers, body) => {
-    console.log('ERROR:', error);
-    console.log('STATUS:', statusCode);
-    console.log('HEADERS:', JSON.stringify(headers));
-    console.log('BODY:', body);
-});
+if (tagExist !== undefined) {
+  if (tagExist === true) {
+    console.log("Kodbox alraady up to date");
+  } else if (tagExist === false) {
+    exec("ls -a");
+  }
+}
