@@ -61,11 +61,11 @@ async function get_origin(uri: string, mode: string, options: Options) {
       }
     } else {
       const err = await res.text();
-      console.error(red("Result: Failure"), '\n', err);
+      console.error(red("Result: Failed"), '\n', err);
     }
   }
 }
 
 let object = ['data','server','version']
-  
+
 get_origin(kodbox_uri, "object", { object });

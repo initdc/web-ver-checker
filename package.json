@@ -2,12 +2,10 @@
   "name": "web-ver-checker",
   "version": "0.0.1",
   "description": "Verison checker by webhook",
-  "type": "module",
-  "module": "./index.js",
   "ignore": ["main.rb", "main.ts"],
-  "main": "main.js",
+  "main": "main.mjs",
   "scripts": {
-    "test": "node main.js"
+    "test": "node main.mjs"
   },
   "repository": {
     "type": "git",

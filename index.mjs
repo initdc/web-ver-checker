@@ -1,4 +1,8 @@
 import fetch from "node-fetch";
+// import http = require("http");
+// import https = require("https");
+
+// "use strict";
 
 let debug = false;
 
@@ -9,6 +13,20 @@ function queryObject(object, keys, current, next) {
   return object[keys[current]];
 }
 
+function MaybeJsonType(o){
+  if (typeof o === "object"){
+    return JSON.stringify(o)
+  }
+  return o
+}
+
+function queryObject2(object, keys, current) {
+  if (current < (keys.length - 1)) {
+    return queryObject2(object[keys[current]], keys, current + 1);
+  }
+  return MaybeJsonType(object[keys[current]]);
+}
+
 export async function getOrigin(origin, mode, options, debug) {
   const uri = new URL(origin);
   const response = await fetch(uri);
@@ -16,7 +34,7 @@ export async function getOrigin(origin, mode, options, debug) {
   if (mode === "json") {
     const resObj = await response.json();
     if (debug === true) console.log("![response]: \n", resObj);
-    const result = queryObject(resObj, options, 0, 1);
+    const result = queryObject2(resObj, options, 0);
     if (debug === true) console.log("![result]: \n", result);
     return result;
   } else if (mode === "regexp") {
@@ -44,4 +62,13 @@ export async function getTarget(targetBase, version, debug) {
     return false;
   }
   return undefined;
+}
+
+function getOrigin_1(origin, mode, options, debug) {
+  const uri = new URL(origin)
+  if (uri.protocol === "http") {
+    http.get(uri)
+  } else if (uri.protocol === "https") {
+    https.get(uri)
+  }
 }

@@ -1,9 +1,11 @@
-import { getOrigin, getTarget } from "./index.js";
+import { getOrigin, getTarget } from "./index.mjs";
+// import exec = require("child_process")
 
 const version = await getOrigin(
   "https://api.kodcloud.com/?app%2Fversion",
   "json",
-  ["data", "server", "version"]
+  ["data", "server", "version"],
+  true
 );
 
 // const regexp = /(version.+)/g;
@@ -15,10 +17,10 @@ const tagExist = await getTarget(
   true
 );
 
-if (tagExist !== undefined) {
-  if (tagExist === true) {
-    console.log("Kodbox alraady up to date");
-  } else if (tagExist === false) {
-    exec("ls -a");
-  }
-}
+// if (tagExist !== undefined) {
+//   if (tagExist === true) {
+//     console.log("Kodbox already up to date");
+//   } else if (tagExist === false) {
+//     exec("ls -a");
+//   }
+// }
